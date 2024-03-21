@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+// React Import
+import React, {Component} from "react";
+import Utama from "./utama";
+import Footer from "./Components/footer";
+import NavbarComponent from "./Components/navbar";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// Import Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+class App extends Component {
+  render() {
+    return(
+        <>
+            <NavbarComponent/>
+            <Utama/>
+            <Footer/>
+        </>
+    )
+  }
 }
 
 export default App;

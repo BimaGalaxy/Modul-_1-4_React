@@ -1,0 +1,19 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.welcome {
+    margin-top: 15%;
+    font-size: 24px;
+}
+
+.welcome h2 {
+    font-family: 'Poppins', sans-serif;
+    border-bottom: 2px solid black;
+    line-height: 2;
+    width: 40%;
+}
+

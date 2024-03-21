@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.about-me {
+    margin-top: 4.5%;
+    margin-left: 100px;
+}
+.about-me h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    line-height: 2;
+    width: 30%;
+}
+.about-me h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+.about-me p {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+.about-me ul li {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
