@@ -19,7 +19,7 @@ class Card extends React.Component {
                             <h5 className="text-info">{this.props.judul}</h5>
                             <h6 className="text-dark">Penulis: {this.props.penulis}</h6>
                             <h6 className="text-dark">Penerbit: {this.props.penerbit}</h6>
-                            <h6 className="text-danger">Harga: Rp50.000 {this.props.harga}</h6>
+                            <h6 className="text-danger">Harga: {this.props.harga}</h6>
 
                             <button className="btn btn-sm btn-primary m-1" onClick={this.props.onEdit}>
                                 Edit
@@ -28,6 +28,12 @@ class Card extends React.Component {
                             <button className="btn btn-sm btn-danger m-1" onClick={this.props.onDrop}>
                                 Hapus
                             </button>
+
+                            {/* button untuk menambah ke keranjang belanja */}
+                            <button className="btn btn-sm btn-success m-1"onClick={this.props.onCart}>
+                                Tambahkan ke keranjang belanja
+                            </button>
+
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "bootstrap";
 import Card from "../card";
 
@@ -12,21 +13,27 @@ class Gallery extends Component {
           judul: "JOJO Steel Ball Run Vol.24",
           penulis: "Hirohiko Araki",
           penerbit: "Gramedia",
-          cover: "https://static.jojowiki.com/images/2/24/latest/20191015215021/Volume_104.jpg"
+          harga: 60000,
+          cover:
+            "https://static.jojowiki.com/images/2/24/latest/20191015215021/Volume_104.jpg",
         },
         {
           isbn: "123456",
           judul: "JOJO Steel Ball Run Vol.17",
           penulis: "Hirohiko Araki",
           penerbit: "Gramedia",
-          cover: "https://static.jojowiki.com/images/a/aa/latest/20230121002011/Volume_97.jpg"
+          harga: 60000,
+          cover:
+            "https://static.jojowiki.com/images/a/aa/latest/20230121002011/Volume_97.jpg",
         },
         {
           isbn: "1234567",
           judul: "JOJO Steel Ball Run Vol.15",
           penulis: "Hirohiko Araki",
           penerbit: "Gramedia",
-          cover: "https://static.jojowiki.com/images/e/e6/latest/20230121002719/Volume_95.jpg"
+          harga: 60000,
+          cover:
+            "https://static.jojowiki.com/images/e/e6/latest/20230121002719/Volume_95.jpg",
         },
       ],
       action: "",
@@ -34,6 +41,7 @@ class Gallery extends Component {
       judul: "",
       penulis: "",
       penerbit: "",
+      harga: null,
       cover: "",
       keyword: "",
       filterBuku: [],
@@ -43,11 +51,75 @@ class Gallery extends Component {
     this.state.filterBuku = this.state.buku;
   }
 
+  handleCart = () => {
+    this.props.history.push("/gallery/cart");
+  };
+
   componentDidMount() {
     this.setState({
       modal: Modal.getOrCreateInstance("#modal_buku"),
     });
+    this.setUser();
   }
+
+  setUser = () => {
+    // cek eksistensi dari session storage
+    if (sessionStorage.getItem("user") === null) {
+      // kondisi jika session storage "user" belum dibuat
+      let prompt = window.prompt("Masukkan Nama Anda", "");
+      if (prompt === null || prompt === "") {
+        // jika user tidak mengisikan namanya
+        this.setUser();
+      } else {
+        // jika user telah mengisikan namanya
+
+        // simpan nama user ke session storage
+        sessionStorage.setItem("user", prompt);
+
+        // simpan nama user ke state.user
+        this.setState({ user: prompt });
+      }
+    } else {
+      // kondisi saat session storage "user" telah dibuat
+
+      // akses nilai dari session storage "user"
+      let name = sessionStorage.getItem("user");
+      this.setState({ user: name });
+    }
+  };
+
+  addToCart = (selectedItem) => {
+    // membuat sebuah variabel untuk menampung cart sementara
+    let tempCart = [];
+
+    // cek eksistensi dari data cart pada localStorage
+    if (localStorage.getItem("cart") !== null) {
+      tempCart = JSON.parse(localStorage.getItem("cart"));
+      // JSON.parse() digunakan untuk mengonversi dari string -> array object
+    }
+
+    // cek data yang dipilih user ke keranjang belanja
+    let existItem = tempCart.find((item) => item.isbn === selectedItem.isbn);
+
+    if (existItem) {
+      // jika item yang dipilih ada pada keranjang belanja
+      window.alert("Anda telah memilih item ini");
+    } else {
+      // user diminta memasukkan jumlah item yang dibeli
+      let promptJumlah = window.prompt("Masukkan jumlah item yang beli", "");
+      if (promptJumlah !== null && promptJumlah !== "") {
+        // jika user memasukkan jumlah item yg dibeli
+        // menambahkan properti "jumlahBeli" pada item yang dipilih
+        selectedItem.jumlahBeli = promptJumlah;
+
+        // masukkan item yg dipilih ke dalam cart
+        tempCart.push(selectedItem);
+
+        // simpan array tempCart ke localStorage
+        localStorage.setItem("cart", JSON.stringify(tempCart));
+      }
+    }
+  };
 
   Add = () => {
     this.state.modal.show();
@@ -56,6 +128,7 @@ class Gallery extends Component {
       judul: "",
       penulis: "",
       penerbit: "",
+      harga: null,
       cover: "",
       action: "insert",
     });
@@ -68,6 +141,7 @@ class Gallery extends Component {
       judul: item.judul,
       penulis: item.penulis,
       penerbit: item.penerbit,
+      harga: item.harga,
       cover: item.cover,
       action: "update",
       selectedItem: item,
@@ -84,6 +158,7 @@ class Gallery extends Component {
         judul: this.state.judul,
         penulis: this.state.penulis,
         penerbit: this.state.penerbit,
+        harga: this.state.harga,
         cover: this.state.cover,
       });
     } else if (this.state.action === "update") {
@@ -95,6 +170,7 @@ class Gallery extends Component {
           judul: this.state.judul,
           penulis: this.state.penulis,
           penerbit: this.state.penerbit,
+          harga: this.state.harga,
           cover: this.state.cover,
         };
       }
@@ -104,13 +180,13 @@ class Gallery extends Component {
   };
 
   Drop = (item) => {
-    if(window.confirm("Apakah anda yakin ingin menghapus data ini?")){
-        let tempBuku = this.state.buku
-        let index = tempBuku.indexOf(item)
-        tempBuku.splice(index, 1)
-        this.setState({buku: tempBuku})
+    if (window.confirm("Apakah anda yakin ingin menghapus data ini?")) {
+      let tempBuku = this.state.buku;
+      let index = tempBuku.indexOf(item);
+      tempBuku.splice(index, 1);
+      this.setState({ buku: tempBuku });
     }
-}
+  };
 
   searching = (event) => {
     if (event.keyCode === 13) {
@@ -130,6 +206,7 @@ class Gallery extends Component {
   render() {
     return (
       <div className="container">
+        <h4 className="text-info my-2">Nama Pengguna: {this.state.user}</h4>
         <input
           type="text"
           className="form-control my-2"
@@ -145,10 +222,12 @@ class Gallery extends Component {
               key={index}
               judul={item.judul}
               penulis={item.penulis}
-              penerbit={item.penerbit} 
+              penerbit={item.penerbit}
+              harga={item.harga}
               cover={item.cover}
               onEdit={() => this.Edit(item)}
               onDrop={() => this.Drop(item)}
+              onCart={ () => this.addToCart(item)}
             />
           ))}
         </div>
@@ -156,12 +235,14 @@ class Gallery extends Component {
         <button className="btn btn-success" onClick={() => this.Add()}>
           Tambah Data
         </button>
+        <button className="btn btn-success" onClick={this.handleCart}>
+          Lihat Keranjang
+        </button>
 
         <div className="modal" id="modal_buku">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">Form Buku</div>
-
               <div className="modal-body">
                 <form onSubmit={this.Save}>
                   Judul Buku
@@ -177,7 +258,9 @@ class Gallery extends Component {
                     type="text"
                     className="form-control mb-2"
                     value={this.state.penulis}
-                    onChange={(ev) => this.setState({ penulis: ev.target.value })}
+                    onChange={(ev) =>
+                      this.setState({ penulis: ev.target.value })
+                    }
                     required
                   />
                   Penerbit Buku
@@ -185,7 +268,19 @@ class Gallery extends Component {
                     type="text"
                     className="form-control mb-2"
                     value={this.state.penerbit}
-                    onChange={(ev) => this.setState({ penerbit: ev.target.value })}
+                    onChange={(ev) =>
+                      this.setState({ penerbit: ev.target.value })
+                    }
+                    required
+                  />
+                  Harga
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={this.state.harga}
+                    onChange={(ev) =>
+                      this.setState({ harga: ev.target.value })
+                    }
                     required
                   />
                   Cover Buku

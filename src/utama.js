@@ -6,6 +6,7 @@
     import Karya from './Components/content/karya';
     import Kontak from './Components/content/kontak';
     import Gallery from "./Components/content/gallery";
+    import Cart from './pages/Cart';
 
     class Utama extends Component {
         render() {
@@ -16,6 +17,7 @@
                     <Route path="/karya" element={<Karya/>}/>
                     <Route path="/kontak" element={<Kontak/>}/>
                     <Route path="/gallery" element={<Gallery/>}/>
+                    <Route path="/gallery/cart" element={<Cart/>}/>
                 </Routes>
             )
         }
